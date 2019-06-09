@@ -8,6 +8,13 @@ describe("routes : static", () => {
       request.get(base, (err, res, body) => {
         expect(res.statusCode).toBe(200);
         done();
+        });
+      });
+    it("should return polo when marco is requested", (done) => {
+      request.get(base + "marco", (err, res, body) => {
+        expect(res.statusCode).toBe(200);
+        expect(res.body).toBe("polo");
+        done();
       });
     });
   });
