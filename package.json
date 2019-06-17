@@ -4,7 +4,7 @@
   "description": "A reddit-like application for users to discuss and share content",
   "main": "src/server.js",
   "scripts": {
-    "test": "jasmine",
+    "test": "NODE_ENV=test jasmine",
     "start": "node src/server.js"
   },
   "author": "",
