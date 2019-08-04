@@ -30,6 +30,7 @@ module.exports = {
    },
 
    show(req, res, next){
+     debugger
 //#1
   topicQueries.getTopic(req.params.id, (err, topic) => {
 
@@ -37,6 +38,7 @@ module.exports = {
     if(err || topic == null){
       res.redirect(404, "/");
     } else {
+      debugger
       res.render("topics/show", {topic});
     }
   });
