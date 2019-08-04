@@ -1,19 +1,19 @@
 const request = require("request");
 const server = require("../../src/server");
-const base = "http://localhost:3000/topics/";
+const base = "http://localhost:3000/advertisements/";
 const sequelize = require("../../src/db/models/index").sequelize;
-const Topic = require("../../src/db/models").Topic;
+const Advertisement = require("../../src/db/models").Advertisement;
 
-describe("routes : topics", () => {
+describe("routes : advertisements", () => {
   beforeEach((done) => {
-      this.topic;
+      this.advertisement;
       sequelize.sync({force: true}).then((res) => {
-       Topic.create({
-         title: "JS Frameworks",
-         description: "There is a lot of them"
+       Advertisement.create({
+         title: "Javascript Ad ",
+         description: "There are very few of them"
        })
-        .then((topic) => {
-          this.topic = topic;
+        .then((advertisement) => {
+          this.advertisement = advertisement;
           done();
         })
         .catch((err) => {
@@ -22,51 +22,51 @@ describe("routes : topics", () => {
         });
       });
     });
-  describe("GET /topics", () => {
-    it("should return a status code 200 and all topics", (done) => {
+  describe("GET /advertisements", () => {
+    it("should return a status code 200 and all advertisements", (done) => {
        request.get(base, (err, res, body) => {
          expect(res.statusCode).toBe(200);
          expect(err).toBeNull();
-         expect(body).toContain("Topics");
-         expect(body).toContain("JS Frameworks");
+         expect(body).toContain("Advertisements");
+         expect(body).toContain("Javascript Ad");
          done();
      });
    });
  });
 
 
- describe("GET /topics/new", () => {
+ describe("GET /advertisements/new", () => {
 
-   it("should render a new topic form", (done) => {
+   it("should render a new advertisement form", (done) => {
      request.get(`${base}new`, (err, res, body) => {
        expect(err).toBeNull();
-       expect(body).toContain("New Topic");
+       expect(body).toContain("New Advertisement");
        done();
      });
    });
  });
 
- describe("POST /topics/create", () => {
+ describe("POST /advertisements/create", () => {
        const options = {
          url: `${base}create`,
          form: {
-           title: "blink-182 songs",
-           description: "What's your favorite blink-182 song?"
+           title: "blink-182 advertisements",
+           description: "What's your favorite blink-182 advertisement?"
          }
        };
 
-       it("should create a new topic and redirect", (done) => {
+       it("should create a new advertisement and redirect", (done) => {
 
  //#1
          request.post(options,
 
  //#2
            (err, res, body) => {
-             Topic.findOne({where: {title: "blink-182 songs"}})
-             .then((topic) => {
+             Advertisement.findOne({where: {title: "blink-182 advertisements"}})
+             .then((advertisement) => {
                expect(res.statusCode).toBe(303);
-               expect(topic.title).toBe("blink-182 songs");
-               expect(topic.description).toBe("What's your favorite blink-182 song?");
+               expect(advertisement.title).toBe("blink-182 advertisements");
+               expect(advertisement.description).toBe("What's your favorite blink-182 advertisement?");
                done();
              })
              .catch((err) => {
@@ -77,59 +77,59 @@ describe("routes : topics", () => {
          );
        });
      });
-     describe("GET /topics/:id", () => {
+     describe("GET /advertisements/:id", () => {
 
-     it("should render a view with the selected topic", (done) => {
-       request.get(`${base}${this.topic.id}`, (err, res, body) => {
+     it("should render a view with the selected advertisement", (done) => {
+       request.get(`${base}${this.advertisement.id}`, (err, res, body) => {
          expect(err).toBeNull();
-         expect(body).toContain("JS Frameworks");
+         expect(body).toContain("Javascript Ad");
          done();
        });
      });
 
    });
-   describe("POST /topics/:id/destroy", () => {
-    it("should delete the topic with the associated ID", (done) => {
+   describe("POST /advertisements/:id/destroy", () => {
+    it("should delete the advertisement with the associated ID", (done) => {
 
   //#1
-      Topic.all()
-      .then((topics) => {
+      Advertisement.all()
+      .then((advertisements) => {
 
   //#2
-        const topicCountBeforeDelete = topics.length;
+        const advertisementCountBeforeDelete = advertisements.length;
 
-        expect(topicCountBeforeDelete).toBe(1);
+        expect(advertisementCountBeforeDelete).toBe(1);
 
-        request.post(`${base}${this.topic.id}/destroy`, (err, res, body) => {
-          Topic.all()
-          .then((topics) => {
+        request.post(`${base}${this.advertisement.id}/destroy`, (err, res, body) => {
+          Advertisement.all()
+          .then((advertisements) => {
             expect(err).toBeNull();
-            expect(topics.length).toBe(topicCountBeforeDelete - 1);
+            expect(advertisements.length).toBe(advertisementCountBeforeDelete - 1);
             done();
           })
         });
       });
     });
   });
-  describe("GET /topics/:id/edit", () => {
-     it("should render a view with an edit topic form", (done) => {
-       request.get(`${base}${this.topic.id}/edit`, (err, res, body) => {
+  describe("GET /advertisements/:id/edit", () => {
+     it("should render a view with an edit advertisement form", (done) => {
+       request.get(`${base}${this.advertisement.id}/edit`, (err, res, body) => {
          expect(err).toBeNull();
-         expect(body).toContain("Edit Topic");
-         expect(body).toContain("JS Frameworks");
+         expect(body).toContain("Edit Advertisement");
+         expect(body).toContain("Javascript Ad");
          done();
        });
      });
    });
 
-   describe("POST /topics/:id/update", () => {
+   describe("POST /advertisements/:id/update", () => {
 
-     it("should update the topic with the given values", (done) => {
+     it("should update the advertisement with the given values", (done) => {
         const options = {
-           url: `${base}${this.topic.id}/update`,
+           url: `${base}${this.advertisement.id}/update`,
            form: {
-             title: "JavaScript Frameworks",
-             description: "There are a lot of them"
+             title: "JS Ad",
+             description: "There are very few of them"
            }
          };
 //#1
@@ -138,11 +138,11 @@ describe("routes : topics", () => {
 
            expect(err).toBeNull();
 //#2
-           Topic.findOne({
-             where: { id: this.topic.id }
+           Advertisement.findOne({
+             where: { id: this.advertisement.id }
            })
-           .then((topic) => {
-             expect(topic.title).toBe("JavaScript Frameworks");
+           .then((advertisement) => {
+             expect(advertisement.title).toBe("JS Ad");
              done();
            });
          });
