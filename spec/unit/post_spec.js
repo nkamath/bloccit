@@ -1,6 +1,7 @@
 const sequelize = require("../../src/db/models/index").sequelize;
 const Topic = require("../../src/db/models").Topic;
 const Post = require("../../src/db/models").Post;
+const Flair = require("../../src/db/models").Flair;
 
 describe("Post", () => {
 
@@ -17,33 +18,37 @@ describe("Post", () => {
       .then((topic) => {
         this.topic = topic;
 
-        Flair.create({
-          name: "news",
-          color: "black",
+        Post.create({
+          title: "My first visit to Proxima Centauri b",
+          body: "I saw some rocks.",
+          topicId: this.topic.id,
         })
-        .then((flair) => {
-          this.flair = flair;
-
-          Post.create({
-            title: "My first visit to Proxima Centauri b",
-            body: "I saw some rocks.",
-            topicId: this.topic.id,
-            flairId: this.flair.id
-          })
-          .then((post) => {
-            this.post = post;
-            done();
-          });
-
+        .then((post) => {
+          this.post = post;
+          done();
         });
-
       })
       .catch((err) => {
         console.log(err);
         done();
       });
-    });
 
+
+      Flair.create({
+        name: "news",
+        color: "black",
+      })
+      .then((flair) => {
+        this.flair = flair;
+        this.post.flairId = this.flair.id;
+        done();
+      })
+      .catch((err) => {
+        console.log(err);
+        done();
+      });
+
+    });
   });
 
   describe("#create()", () => {
