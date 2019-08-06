@@ -7,6 +7,7 @@ describe("Post", () => {
   beforeEach((done) => {
     this.topic;
     this.post;
+    this.flair;
     sequelize.sync({force: true}).then((res) => {
 
       Topic.create({
@@ -16,15 +17,26 @@ describe("Post", () => {
       .then((topic) => {
         this.topic = topic;
 
-        Post.create({
-          title: "My first visit to Proxima Centauri b",
-          body: "I saw some rocks.",
-          topicId: this.topic.id
+        Flair.create({
+          name: "news",
+          color: "black",
         })
-        .then((post) => {
-          this.post = post;
-          done();
+        .then((flair) => {
+          this.flair = flair;
+
+          Post.create({
+            title: "My first visit to Proxima Centauri b",
+            body: "I saw some rocks.",
+            topicId: this.topic.id,
+            flairId: this.flair.id
+          })
+          .then((post) => {
+            this.post = post;
+            done();
+          });
+
         });
+
       })
       .catch((err) => {
         console.log(err);
@@ -109,4 +121,39 @@ describe("Post", () => {
        });
      });
    });
+
+   describe("#setFlair()", () => {
+      it("should associate a flair and a post together", (done) => {
+
+ // #1
+        Flair.create({
+          name: "blog",
+          color: "yellow"
+        })
+        .then((newFlair) => {
+ // #2
+          expect(this.post.flairId).toBe(this.flair.id);
+ // #3
+          this.post.setFlair(newFlair)
+          .then((post) => {
+ // #4
+            expect(post.flairId).toBe(newFlair.id);
+            done();
+
+          });
+        })
+      });
+   });
+
+   describe("#getFlair()", () => {
+      it("should return the associated flair", (done) => {
+        this.post.getFlair()
+        .then((associatedFlair) => {
+          expect(associatedFlair.name).toBe("news");
+          done();
+        });
+      });
+    });
+
+
 });
