@@ -24,30 +24,22 @@ describe("Post", () => {
           topicId: this.topic.id,
         })
         .then((post) => {
-          this.post = post;
-          done();
+            this.post = post;
+            Flair.create({
+              name: "news",
+              color: "black",
+            })
+            .then((flair) => {
+              this.flair = flair;
+              this.post.flairId = this.flair.id;
+              done();
+            })
         });
       })
       .catch((err) => {
         console.log(err);
         done();
       });
-
-
-      Flair.create({
-        name: "news",
-        color: "black",
-      })
-      .then((flair) => {
-        this.flair = flair;
-        this.post.flairId = this.flair.id;
-        done();
-      })
-      .catch((err) => {
-        console.log(err);
-        done();
-      });
-
     });
   });
 

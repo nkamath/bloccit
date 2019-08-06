@@ -55,7 +55,7 @@ describe("Flair", () => {
        })
        .then((flair) => {
          expect(flair.name).toBe("blog");
-         expect(post.color).toBe("yellow");
+         expect(flair.color).toBe("yellow");
          done();
 
        })
