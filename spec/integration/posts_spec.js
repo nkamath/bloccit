@@ -5,6 +5,7 @@ const base = "http://localhost:3000/topics";
 const sequelize = require("../../src/db/models/index").sequelize;
 const Topic = require("../../src/db/models").Topic;
 const Post = require("../../src/db/models").Post;
+const Flair = require("../../src/db/models").Flair;
 
 describe("routes : posts", () => {
 
@@ -28,7 +29,15 @@ describe("routes : posts", () => {
         })
         .then((post) => {
           this.post = post;
-          done();
+          Flair.create({
+            name: "news",
+            color: "black",
+          })
+          .then((flair) => {
+            this.flair = flair;
+            this.post.flairId = this.flair.id;
+            done();
+          })
         })
         .catch((err) => {
           console.log(err);
@@ -86,6 +95,7 @@ describe("routes : posts", () => {
         request.get(`${base}/${this.topic.id}/posts/${this.post.id}`, (err, res, body) => {
           expect(err).toBeNull();
           expect(body).toContain("Snowball Fighting");
+          expect(body).toContain("news");
           done();
         });
       });
