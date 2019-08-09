@@ -40,26 +40,46 @@ module.exports = {
      })
    },
 
-   deleteTopic(id, callback){
-     return Topic.destroy({
-       where: {id}
-     })
+   deleteTopic(req, callback){
+     return Topic.findByPk(req.params.id)
      .then((topic) => {
-       callback(null, topic);
+
+ // #2
+       const authorized = new Authorizer(req.user, topic).destroy();
+
+       if(authorized) {
+ // #3
+         topic.destroy()
+         .then((res) => {
+           callback(null, topic);
+         });
+
+       } else {
+
+ // #4
+         req.flash("notice", "You are not authorized to do that.")
+         callback(401);
+       }
      })
      .catch((err) => {
        callback(err);
-     })
+     });
    },
+   updateTopic(req, updatedTopic, callback){
 
-   updateTopic(id, updatedTopic, callback){
-     return Topic.findById(id)
-     .then((topic) => {
-       if(!topic){
-         return callback("Topic not found");
-       }
+// #1
+   return Topic.findByPk(req.params.id)
+   .then((topic) => {
+     if(!topic){
+       return callback("Topic not found");
+     }
 
-//#1
+// #3
+     const authorized = new Authorizer(req.user, topic).update();
+
+     if(authorized) {
+
+// #4
        topic.update(updatedTopic, {
          fields: Object.keys(updatedTopic)
        })
@@ -69,6 +89,10 @@ module.exports = {
        .catch((err) => {
          callback(err);
        });
-     });
-   }
+     } else {
+       req.flash("notice", "You are not authorized to do that.");
+       callback("Forbidden");
+     }
+    });
+  }
 }
