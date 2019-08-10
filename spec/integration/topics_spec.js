@@ -118,8 +118,6 @@ describe("routes : topics", () => {
      });
     describe("POST /topics/:id/destroy", () => {
       it("should delete the topic with the associated ID", (done) => {
-
-    //#1
         Topic.all()
         .then((topics) => {
 

@@ -40,23 +40,18 @@ module.exports = {
      })
    },
 
-   deleteTopic(req, callback){
-     return Topic.findByPk(req.params.id)
-     .then((topic) => {
-
- // #2
+  deleteTopic(req, callback){
+     return Topic.findByPk(req.params.id).then((topic) => {
        const authorized = new Authorizer(req.user, topic).destroy();
-
+       debugger
+       console.log("queries.topics authorized: " + authorized);
        if(authorized) {
  // #3
          topic.destroy()
          .then((res) => {
            callback(null, topic);
          });
-
        } else {
-
- // #4
          req.flash("notice", "You are not authorized to do that.")
          callback(401);
        }
@@ -66,20 +61,14 @@ module.exports = {
      });
    },
    updateTopic(req, updatedTopic, callback){
-
-// #1
    return Topic.findByPk(req.params.id)
    .then((topic) => {
      if(!topic){
        return callback("Topic not found");
      }
-
-// #3
      const authorized = new Authorizer(req.user, topic).update();
-
      if(authorized) {
-
-// #4
+       debugger
        topic.update(updatedTopic, {
          fields: Object.keys(updatedTopic)
        })

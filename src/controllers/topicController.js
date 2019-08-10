@@ -47,41 +47,32 @@ module.exports = {
     }
   },
 
+  show(req, res, next){
+    topicQueries.getTopic(req.params.id, (err, topic) => {
+      if(err || topic == null){
+        res.redirect(404, "/");
+      } else {
+        res.render("topics/show", {topic});
+      }
+    });
+  },
 
-   show(req, res, next){
-     debugger
-//#1
-  topicQueries.getTopic(req.params.id, (err, topic) => {
-
-//#2
-    if(err || topic == null){
-      res.redirect(404, "/");
-    } else {
-      debugger
-      res.render("topics/show", {topic});
-    }
-  });
-},
-   destroy(req, res, next){
-     topicQueries.deleteTopic(req, (err, topic) => {
-       if(err){
-         res.redirect(err, `/topics/${req.params.id}`)
-       } else {
+  destroy(req, res, next){
+    topicQueries.deleteTopic(req, (err, topic) => {
+      if(err){
+        res.redirect(err, `/topics/${req.params.id}`)
+      }else {
          res.redirect(303, "/topics")
-       }
-     });
-   },
+      }
+    });
+  },
 
-   edit(req, res, next){
-  topicQueries.getTopic(req.params.id, (err, topic) => {
-    if(err || topic == null){
-      res.redirect(404, "/");
-    } else {
-
-// #2
-      const authorized = new Authorizer(req.user, topic).edit();
-
-// #3
+  edit(req, res, next){
+    topicQueries.getTopic(req.params.id, (err, topic) => {
+      if(err || topic == null){
+        res.redirect(404, "/");
+      } else {
+        const authorized = new Authorizer(req.user, topic).edit();
       if(authorized){
         res.render("topics/edit", {topic});
       } else {
@@ -92,17 +83,14 @@ module.exports = {
   });
 },
 
-
-update(req, res, next){
-
-// #1
-  topicQueries.updateTopic(req, req.body, (err, topic) => {
-    if(err || topic == null){
-      res.redirect(401, `/topics/${req.params.id}/edit`);
-    } else {
-      res.redirect(`/topics/${req.params.id}`);
-    }
-  });
-}
+  update(req, res, next){
+    topicQueries.updateTopic(req, req.body, (err, topic) => {
+      if(err || topic == null){
+        res.redirect(401, `/topics/${req.params.id}/edit`);
+      } else {
+        res.redirect(`/topics/${req.params.id}`);
+      }
+    });
+  }
 
 }
