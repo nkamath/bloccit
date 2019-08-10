@@ -18,7 +18,7 @@ describe("routes : posts", () => {
            User.create({
              email: "starman@tesla.com",
              password: "Trekkie4lyfe",
-             role: "member"
+             role: "admin"
            })
            .then((user) => {
              this.user = user;
@@ -39,6 +39,18 @@ describe("routes : posts", () => {
              .then((topic) => {
                this.topic = topic;
                this.post = topic.posts[0];
+
+               request.get({           // mock authentication
+                 url: "http://localhost:3000/auth/fake",
+                 form: {
+                   userId: 0 // flag to indicate mock auth to destroy any session
+                 }
+               },
+                 (err, res, body) => {
+                   done();
+                 }
+               );
+
                done();
              })
            })

@@ -1,6 +1,8 @@
 const Post = require("./models").Post;
 const Topic = require("./models").Topic;
 const Authorizer = require("../policies/post");
+const Comment = require("./models").Comment;
+const User = require("./models").User;
 
 
 module.exports = {
@@ -15,8 +17,14 @@ module.exports = {
       },
 
   getPost(id, callback){
-       return Post.findById(id)
-       .then((post) => {
+    return Post.findById(id, {
+          include: [
+            {model: Comment, as: "comments", include: [
+              {model: User }
+            ]}
+          ]
+        })
+        .then((post) => {
          callback(null, post);
        })
        .catch((err) => {
@@ -48,7 +56,6 @@ module.exports = {
         if(!post){
           return callback("Post not found");
         }
-debugger
         const authorized = new Authorizer(req.user, post).update();
         if(authorized) {
           post.update(updatedPost, {
