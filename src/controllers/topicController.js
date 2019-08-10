@@ -58,10 +58,13 @@ module.exports = {
   },
 
   destroy(req, res, next){
+    debugger
     topicQueries.deleteTopic(req, (err, topic) => {
       if(err){
+        debugger
         res.redirect(err, `/topics/${req.params.id}`)
       }else {
+        debugger
          res.redirect(303, "/topics")
       }
     });
