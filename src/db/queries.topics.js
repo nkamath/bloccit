@@ -45,24 +45,21 @@ module.exports = {
   deleteTopic(req, callback){
      return Topic.findById(req.params.id).then((topic) => {
        const authorized = new Authorizer(req.user, topic).destroy();
-       console.log("queries.topics authorized: " + authorized);
        if(authorized) {
- // #3
          topic.destroy()
          .then((res) => {
            callback(null, topic);
          });
        } else {
-         debugger
          req.flash("notice", "You are not authorized to do that.")
          callback(401);
        }
      })
      .catch((err) => {
-       debugger
        callback(err);
      });
    },
+
    updateTopic(req, updatedTopic, callback){
    return Topic.findById(req.params.id)
    .then((topic) => {
@@ -71,7 +68,6 @@ module.exports = {
      }
      const authorized = new Authorizer(req.user, topic).update();
      if(authorized) {
-       debugger
        topic.update(updatedTopic, {
          fields: Object.keys(updatedTopic)
        })

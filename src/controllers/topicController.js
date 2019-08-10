@@ -13,7 +13,6 @@ module.exports = {
   },
 
   new(req, res, next){
-// #2
   const authorized = new Authorizer(req.user).new();
 
     if(authorized) {
@@ -58,14 +57,11 @@ module.exports = {
   },
 
   destroy(req, res, next){
-    debugger
     topicQueries.deleteTopic(req, (err, topic) => {
       if(err){
-        debugger
-        res.redirect(err, `/topics/${req.params.id}`)
-      }else {
-        debugger
-         res.redirect(303, "/topics")
+        res.redirect(err, `/topics/${req.params.id}`);
+      } else {
+         res.redirect(303, "/topics");
       }
     });
   },
@@ -79,8 +75,8 @@ module.exports = {
       if(authorized){
         res.render("topics/edit", {topic});
       } else {
-        req.flash("You are not authorized to do that.")
-        res.redirect(`/topics/${req.params.id}`)
+        req.flash("You are not authorized to do that.");
+        res.redirect(`/topics/${req.params.id}`);
       }
     }
   });

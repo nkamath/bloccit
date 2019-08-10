@@ -46,11 +46,11 @@ describe("routes : topics", () => {
       });
     });
     // #1: define the admin user context
-   describe("admin user performing CRUD actions for Topic", () => {
+  describe("admin user performing CRUD actions for Topic", () => {
 
 // #2: // before each test in admin user context, send an authentication request
        // to a route we will create to mock an authentication request
-     beforeEach((done) => {
+    beforeEach((done) => {
        authorizeUser("admin", done);
      });
     describe("GET /topics", () => {
@@ -182,7 +182,6 @@ describe("routes : topics", () => {
       beforeEach((done) => {  // before each suite in member context
         authorizeUser("member", done);
       });
-
       describe("GET /topics", () => {
 
         it("should respond with all topics", (done) => {
@@ -195,7 +194,6 @@ describe("routes : topics", () => {
         });
 
       });
-
       describe("GET /topics/new", () => {
 
         it("should redirect to topics view", (done) => {
@@ -205,9 +203,7 @@ describe("routes : topics", () => {
             done();
           });
         });
-
       });
-
       describe("POST /topics/create", () => {
         const options = {
           url: `${base}create`,
@@ -233,7 +229,6 @@ describe("routes : topics", () => {
           );
         });
       });
-
       describe("GET /topics/:id", () => {
 
         it("should render a view with the selected topic", (done) => {
@@ -246,7 +241,6 @@ describe("routes : topics", () => {
           });
         });
       });
-
       describe("POST /topics/:id/destroy", () => {
 
         it("should not delete the topic with the associated ID", (done) => {
@@ -271,7 +265,6 @@ describe("routes : topics", () => {
         });
 
       });
-
       describe("GET /topics/:id/edit", () => {
 
         it("should not render a view with an edit topic form", (done) => {
@@ -285,7 +278,6 @@ describe("routes : topics", () => {
         });
 
       });
-
       describe("POST /topics/:id/update", () => {
 
         it("should not update the topic with the given values", (done) => {
