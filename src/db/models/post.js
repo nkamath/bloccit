@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
        type: DataTypes.INTEGER,
        allowNull: false
      }
-  }, {});
+  });
   Post.associate = function(models) {
     Post.belongsTo(models.Topic, {
       foreignKey: "topicId",
@@ -39,16 +39,16 @@ module.exports = (sequelize, DataTypes) => {
      as: "votes"
    });
 
+   Post.prototype.getPoints = function(){
+      if(this.votes && this.votes.length === 0)
+      return 0
+
+      return this.votes
+        .map((v) => { return v.value })
+        .reduce((prev, next) => { return prev + next });
+    };
   };
 
-  Post.prototype.getPoints = function(){
-debugger
-     if(this.votes.length === 0) return 0
-
-     return this.votes
-       .map((v) => { return v.value })
-       .reduce((prev, next) => { return prev + next });
-   };
 
   return Post;
 };

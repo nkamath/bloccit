@@ -61,7 +61,6 @@ describe("Vote", () => {
       });
     });
   });
-
   describe("#create()", () => {
 
        it("should create an upvote on a post for a user", (done) => {
@@ -281,11 +280,15 @@ describe("Vote", () => {
            postId: this.post.id
          })
             .then((vote2) => {
-debugger
-           expect(this.post.getPoints()).toBe(2);
-           done();
-         });
-          })
+              // Post.findOne({
+              //   where: { id: this.post.id }
+              // })
+              // .then((post) => {
+                 expect(this.post.getPoints()).toBe(2);
+                 done();
+              });
+            });
+          // });
         })
        .catch((err) => {
          console.log(err);
