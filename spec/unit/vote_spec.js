@@ -260,7 +260,6 @@ describe("Vote", () => {
        });
      });
   });
-
   describe("#getPoints()", () => {
      it("should return the correct points value", (done) => {
        Vote.create({
@@ -280,20 +279,125 @@ describe("Vote", () => {
            postId: this.post.id
          })
             .then((vote2) => {
-              // Post.findOne({
-              //   where: { id: this.post.id }
-              // })
-              // .then((post) => {
+              this.post.getVotes()
+              .then((votes) => {
+                 this.post.votes = votes;
                  expect(this.post.getPoints()).toBe(2);
                  done();
               });
             });
-          // });
+          });
         })
        .catch((err) => {
          console.log(err);
          done();
        });
      });
+  });
+  describe("#hasUpvoteFor()", () => {
+
+   it("should return true if a given user has upvoted the given post", (done) => {
+       Vote.create({
+         value: 1,
+         userId: this.user.id,
+         postId: this.post.id
+       })
+       .then((vote) => {
+           this.post.getVotes()
+           .then((votes) => {
+             this.post.votes = votes;
+             expect(this.post.hasUpvoteFor(this.user.id)).toBe(true);
+             done();
+           });
+         })
+       .catch((err) => {
+         console.log(err);
+         done();
+     });
+   });
+   it("should return false if a given user has downvoted the given post", (done) => {
+       Vote.create({
+         value: -1,
+         userId: this.user.id,
+         postId: this.post.id
+       })
+       .then((vote) => {
+           this.post.getVotes()
+           .then((votes) => {
+             this.post.votes = votes;
+             expect(this.post.hasUpvoteFor(this.user.id)).toBe(false);
+             done();
+           });
+         })
+       .catch((err) => {
+         console.log(err);
+         done();
+     });
+   });
+   it("should return false if a given user has not voted on the given post", (done) => {
+     this.post.getVotes()
+       .then((votes) => {
+         this.post.votes = votes;
+         expect(this.post.hasUpvoteFor(this.user.id)).toBe(false);
+         done();
+       })
+     .catch((err) => {
+       console.log(err);
+       done();
+     });
+   });
+  });
+  describe("#hasDownvoteFor()", () => {
+
+   it("should return true if a given user has downvoted the given post", (done) => {
+       Vote.create({
+         value: -1,
+         userId: this.user.id,
+         postId: this.post.id
+       })
+       .then((vote) => {
+           this.post.getVotes()
+           .then((votes) => {
+             this.post.votes = votes;
+             expect(this.post.hasDownvoteFor(this.user.id)).toBe(true);
+             done();
+           });
+         })
+       .catch((err) => {
+         console.log(err);
+         done();
+     });
+   });
+   it("should return false if a given user has upvoted the given post", (done) => {
+       Vote.create({
+         value: 1,
+         userId: this.user.id,
+         postId: this.post.id
+       })
+       .then((vote) => {
+           this.post.getVotes()
+           .then((votes) => {
+             this.post.votes = votes;
+             expect(this.post.hasDownvoteFor(this.user.id)).toBe(false);
+             done();
+           });
+         })
+       .catch((err) => {
+         console.log(err);
+         done();
+     });
+   });
+   it("should return false if a given user has not voted on the given post", (done) => {
+     this.post.getVotes()
+       .then((votes) => {
+         this.post.votes = votes;
+         expect(this.post.hasDownvoteFor(this.user.id)).toBe(false);
+         done();
+       })
+     .catch((err) => {
+       console.log(err);
+       done();
+     });
+   });
   });
 });
