@@ -96,7 +96,7 @@ describe("routes : favorites", () => {
           });
       });
     })
-  })
+  });
 
   describe("signed in user favoriting a post", () => {
 
@@ -112,6 +112,7 @@ describe("routes : favorites", () => {
           done();
         });
     });
+
     describe("POST /topics/:topicId/posts/:postId/favorites/create", () => {
       it("should create a favorite", (done) => {
         const options = {
@@ -125,7 +126,9 @@ describe("routes : favorites", () => {
                   postId: this.post.id
                 }
               })
-              .then((favorite) => { // confirm that a favorite was created
+              .then((favorite) => {
+                console.log("create test " + favorite.userId)
+                // confirm that a favorite was created
                 expect(favorite).not.toBeNull();
                 expect(favorite.userId).toBe(this.user.id);
                 expect(favorite.postId).toBe(this.post.id);
@@ -138,6 +141,7 @@ describe("routes : favorites", () => {
           });
       });
     });
+
     describe("POST /topics/:topicId/posts/:postId/favorites/:id/destroy", () => {
       it("should destroy a favorite", (done) => {
         const options = {
@@ -146,11 +150,9 @@ describe("routes : favorites", () => {
 
         let favCountBeforeDelete
         request.post(options, (err, res, body) => {
-
           this.post.getFavorites()
             .then((favorites) => {
               const favorite = favorites[0];
-debugger
               favCountBeforeDelete = favorites.length;
               request.post(`${base}${this.topic.id}/posts/${this.post.id}/favorites/${favorite.id}/destroy`,
                 (err, res, body) => {

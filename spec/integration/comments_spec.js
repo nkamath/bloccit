@@ -123,7 +123,6 @@ describe("routes : comments", () => {
                expect(comments.length).toBe(commentCountBeforeDelete);
                done();
              })
-
            });
          })
        });
