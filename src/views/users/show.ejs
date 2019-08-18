@@ -19,8 +19,6 @@
       <h2> Latest Posts</h2>
 
       <ul class="list-unstyled">
-
- <!-- #2 -->
         <% if(posts) { %>
           <% posts.forEach((post) => { %>
  <!-- #3 -->
@@ -37,8 +35,6 @@
       <h2> Latest Comments</h2>
 
       <ul class="list-unstyled">
-
- <!-- #4 -->
         <% if(comments) { %>
           <% comments.forEach((comment) => { %>
 
@@ -50,6 +46,20 @@
               <p>Comment: <%= comment.body %></p>
             </li>
             <hr>
+          <% }) %>
+        <% } %>
+      </ul>
+      <h2> Favorited Posts</h2>
+
+      <ul class="list-unstyled">
+        <% if(favoritePosts) { %>
+          <% favoritePosts.forEach((favoritePost) => { %>
+ <!-- #3 -->
+            <li>
+              <a href="/topics/<%= favoritePost.Post.topicId %>/posts/<%= favoritePost.id %>">
+                <%= favoritePost.Post.title %>
+              </a>
+            </li>
           <% }) %>
         <% } %>
       </ul>
