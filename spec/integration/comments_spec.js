@@ -84,6 +84,7 @@ describe("routes : comments", () => {
      describe("POST /topics/:topicId/posts/:postId/comments/create", () => {
 
        it("should not create a new comment", (done) => {
+         console.log('NODE_ENV', process.env.NODE_ENV)
          const options = {
            url: `${base}${this.topic.id}/posts/${this.post.id}/comments/create`,
            form: {
